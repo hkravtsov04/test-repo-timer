@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:TimerApp"
+             x:Class="TimerApp.MainPage">
+
+    <ContentPage.BindingContext>
+        <local:TimerViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid VerticalOptions="Center" HorizontalOptions="Center">
+        <VerticalStackLayout Spacing="20" Padding="20">
+            <!--time input-->
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center" 
+                                 IsEnabled="{Binding CanSetTime}">
+                <Entry Text="{Binding Hours}" 
+                       Keyboard="Numeric"
+                       WidthRequest="60"
+                       MaxLength="2"
+                       Placeholder="hh"/>
+                <Label Text=":" 
+                       VerticalOptions="Center"/>
+                <Entry Text="{Binding Minutes}" 
+                       Keyboard="Numeric"
+                       WidthRequest="60"
+                       MaxLength="2"
+                       Placeholder="mm"/>
+                <Label Text=":" 
+                       VerticalOptions="Center"/>
+                <Entry Text="{Binding Seconds}" 
+                       Keyboard="Numeric"
+                       WidthRequest="60"
+                       MaxLength="2"
+                       Placeholder="ss"/>
+            </HorizontalStackLayout>
+
+            <!--timer display-->
+            <Label Text="{Binding DisplayTime}" 
+                   FontSize="48" 
+                   HorizontalOptions="Center" 
+                   FontFamily="Monospace"/>
+
+            <!--buttons-->
+            <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                <Button Text="Start" 
+                        Command="{Binding StartCommand}"
+                        WidthRequest="100"/>
+                <Button Text="Stop" 
+                        Command="{Binding StopCommand}"
+                        WidthRequest="100"/>
+                <Button Text="Reset" 
+                        Command="{Binding ResetCommand}"
+                        WidthRequest="100"/>
+            </HorizontalStackLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
