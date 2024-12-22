@@ -1,0 +1,15 @@
+bin/
+obj/
+
+*.user
+*.lock
+*.cache
+*.log
+
+project.nuget.cache
+*.nuget.g.props
+*.nuget.g.targets
+
+.vscode/
+
+*.designer.cs
