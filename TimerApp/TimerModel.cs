@@ -44,8 +44,8 @@ public class TimerModel : ITimerModel
         {
             while (!_cancellationTokenSource.Token.IsCancellationRequested && _remainingTime > TimeSpan.Zero)
             {
-                await Task.Delay(100);
                 _remainingTime = _remainingTime.Subtract(TimeSpan.FromMilliseconds(100));
+                await Task.Delay(100);
                 if (_remainingTime <= TimeSpan.Zero)
                 {
                     _remainingTime = TimeSpan.Zero;
