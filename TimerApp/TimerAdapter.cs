@@ -1,4 +1,10 @@
-public class TimerAdapter
+public interface ITimerAdapter
+{
+    string FormatTime(TimeSpan time);
+}
+
+
+public class TimerAdapter : ITimerAdapter
 {
     public string FormatTime(TimeSpan time)
     {

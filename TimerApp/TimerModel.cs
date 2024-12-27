@@ -1,4 +1,16 @@
-public class TimerModel
+namespace TimerApp;
+
+public interface ITimerModel
+{
+    TimeSpan RemainingTime { get; }
+    TimeSpan InitialTime { get; }
+    void SetTime(TimeSpan time);
+    Task StartAsync(Action<TimeSpan> onTick, Action onComplete);
+    void Stop();
+    void Reset();
+}
+
+public class TimerModel : ITimerModel
 {
     private TimeSpan _remainingTime;
     private TimeSpan _initialTime;

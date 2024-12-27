@@ -1,12 +1,23 @@
-using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using Microsoft.Maui.Controls;
 
 namespace TimerApp
 {
-    public class TimerViewModel : INotifyPropertyChanged
+    public interface ITimerViewModel : INotifyPropertyChanged
+    {
+        string DisplayTime { get; }
+        bool IsRunning { get; }
+        bool CanSetTime { get; }
+        int Hours { get; set; }
+        int Minutes { get; set; }
+        int Seconds { get; set; }
+        ICommand StartCommand { get; }
+        ICommand StopCommand { get; }
+        ICommand ResetCommand { get; }
+    }
+
+    public class TimerViewModel : ITimerViewModel
     {
         private readonly TimerFacade _timerFacade;
         private string _displayTime;
@@ -122,7 +133,7 @@ namespace TimerApp
         private async void OnTimerComplete()
         {
             IsRunning = false;
-            await Application.Current.MainPage.DisplayAlert("Timer", "Time's up!", "OK");
+            await Application.Current.MainPage.DisplayAlert("Timer", "Time is up!", "OK");
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

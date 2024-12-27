@@ -1,4 +1,15 @@
-public class TimerFacade
+namespace TimerApp;
+
+public interface ITimerFacade
+{
+    void SetTime(TimeSpan time);
+    Task StartAsync(Action<string> onTick, Action onComplete);
+    void Stop();
+    void Reset();
+    string GetCurrentTime();
+}
+
+public class TimerFacade : ITimerFacade
 {
     private readonly TimerModel _timerModel;
     private readonly TimerAdapter _adapter;
