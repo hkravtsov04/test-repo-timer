@@ -12,6 +12,9 @@ namespace TimerApp
         int Hours { get; set; }
         int Minutes { get; set; }
         int Seconds { get; set; }
+        double HourHandAngle { get; }
+        double MinuteHandAngle { get; }
+        double SecondHandAngle { get; }
         ICommand StartCommand { get; }
         ICommand StopCommand { get; }
         ICommand ResetCommand { get; }
@@ -19,10 +22,13 @@ namespace TimerApp
 
     public class TimerViewModel : ITimerViewModel
     {
-        private readonly TimerFacade _timerFacade;
+        private readonly ITimerFacade _timerFacade;
         private string _displayTime;
         private TimeSpan _selectedTime;
         private bool _isRunning;
+        private double _hourHandAngle;
+        private double _minuteHandAngle;
+        private double _secondHandAngle;
 
         public string DisplayTime
         {
@@ -32,6 +38,45 @@ namespace TimerApp
                 if (_displayTime != value)
                 {
                     _displayTime = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double HourHandAngle
+        {
+            get => _hourHandAngle;
+            private set
+            {
+                if (_hourHandAngle != value)
+                {
+                    _hourHandAngle = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double MinuteHandAngle
+        {
+            get => _minuteHandAngle;
+            private set
+            {
+                if (_minuteHandAngle != value)
+                {
+                    _minuteHandAngle = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public double SecondHandAngle
+        {
+            get => _secondHandAngle;
+            private set
+            {
+                if (_secondHandAngle != value)
+                {
+                    _secondHandAngle = value;
                     OnPropertyChanged();
                 }
             }
@@ -61,7 +106,7 @@ namespace TimerApp
                 if (CanSetTime)
                 {
                     _selectedTime = new TimeSpan(value, _selectedTime.Minutes, _selectedTime.Seconds);
-                    UpdateDisplayTime();
+                    UpdateDisplay();
                 }
             }
         }
@@ -74,7 +119,7 @@ namespace TimerApp
                 if (CanSetTime)
                 {
                     _selectedTime = new TimeSpan(_selectedTime.Hours, value, _selectedTime.Seconds);
-                    UpdateDisplayTime();
+                    UpdateDisplay();
                 }
             }
         }
@@ -87,7 +132,7 @@ namespace TimerApp
                 if (CanSetTime)
                 {
                     _selectedTime = new TimeSpan(_selectedTime.Hours, _selectedTime.Minutes, value);
-                    UpdateDisplayTime();
+                    UpdateDisplay();
                 }
             }
         }
@@ -100,13 +145,14 @@ namespace TimerApp
         {
             _timerFacade = new TimerFacade();
             _selectedTime = TimeSpan.Zero;
-            UpdateDisplayTime();
+            UpdateDisplay();
 
             StartCommand = new Command(async () =>
             {
                 IsRunning = true;
                 await _timerFacade.StartAsync(
                     time => DisplayTime = time,
+                    angles => UpdateClockAngles(angles),
                     OnTimerComplete);
             });
 
@@ -119,15 +165,23 @@ namespace TimerApp
             ResetCommand = new Command(() =>
             {
                 _timerFacade.Reset();
-                UpdateDisplayTime();
+                UpdateDisplay();
                 IsRunning = false;
             });
         }
 
-        private void UpdateDisplayTime()
+        private void UpdateDisplay()
         {
             _timerFacade.SetTime(_selectedTime);
             DisplayTime = _timerFacade.GetCurrentTime();
+            UpdateClockAngles(_timerFacade.GetClockAngles());
+        }
+
+        private void UpdateClockAngles((double Hours, double Minutes, double Seconds) angles)
+        {
+            HourHandAngle = angles.Hours;
+            MinuteHandAngle = angles.Minutes;
+            SecondHandAngle = angles.Seconds;
         }
 
         private async void OnTimerComplete()
